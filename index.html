@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Reformat Phone #s</title>
+  </head>
+  <body>
+  
+    <div class="container text-center">
+      <button id="myBtn" class="btn btn-primary my-3">Reformat and Copy to Clipboard</button>
+      <div class="row">
+        <div class="col-sm">
+          <div class="form-group">
+            <label for="input">Unformatted</label>
+            <textarea class="form-control" id="input" rows="3" placeholder="Enter one # per line"></textarea>
+          </div>
+        </div>
+        <div class="col-sm">
+          <div class="form-group">
+            <label for="output">Reformatted</label>
+            <textarea class="form-control" id="output" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    document.querySelector("#myBtn").addEventListener("click", function() {
+      reformatPhoneNumbers();
+      copyOutputToClipboard();
+    });
+
+    function reformatPhoneNumbers() {
+      let unformatted = document.querySelector("#input").value.split("\n");
+      let reformatted = unformatted.map(reformatPhoneNumber)
+      document.querySelector("#output").value = reformatted.join("\n");
+    }
+
+    function reformatPhoneNumber(number) {
+      let digits = number.toString().replace(/\D/g,"");
+      if (digits.length === 11 && digits.slice(0,1) === "1") {
+        digits = digits.slice(1);
+      }
+      if (digits.length === 10) {
+        let match = digits.match(/^(\d{3})(\d{3})(\d{4})$/);  
+        return "(" + match[1] + ") " + match[2] + "-" + match[3];
+      }
+     return number; 
+    }
+
+    function copyOutputToClipboard() {
+      let output = document.querySelector("#output");
+      output.select();
+      output.setSelectionRange(0, 99999); // For mobile devices
+      try {
+        document.execCommand("copy");  
+      } catch(err) {
+        window.alert("Not able to copy output automatically");
+      }
+    }
+    </script>
+    
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
